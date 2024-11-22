@@ -1,17 +1,22 @@
-<!-- main.hbs-->
-
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
-    <title>Group 124 Bookstore</title>
+    <title>{{#if title}}{{title}}{{else}}Group 124 Bookstore{{/if}}</title>
 </head>
 
 <body>
 
+    <!-- Navigation Links -->
+    <nav>
+        <a href="/">Books</a>
+        <a href="/authors">Authors</a>
+        <a href="/genres">Genres</a>
+    </nav>
+
+    <!-- Main Content -->
     {{{body}}}
 
 </body>
-
 </html>
