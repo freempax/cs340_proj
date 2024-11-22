@@ -1,0 +1,35 @@
+<!-- /views/genres.hbs -->
+
+<h1>Genres</h1>
+
+<!-- Genres Table -->
+<table>
+    <thead>
+        <tr>
+            <th>Genre ID</th>
+            <th>Title</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each data}}
+        <tr>
+            <td>{{this.genre_id}}</td>
+            <td>{{this.title}}</td>
+            <td>{{this.description}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<!-- Form to Add a New Genre -->
+<h2>Add a New Genre</h2>
+<form method="POST" action="/add-genre-form">
+    <label for="genre-title">Title:</label>
+    <input type="text" name="genre-title" id="genre-title" required>
+
+    <label for="genre-description">Description:</label>
+    <input type="text" name="genre-description" id="genre-description">
+
+    <input type="submit" value="Add Genre">
+</form>
