@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add a Genre</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/index.html'>Home</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_a_book.html'>Add a Book</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_a_sales_order.html'>Add an Order</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_a_genre.html'>Add a Genre</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_an_author.html'>Add an Author</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_a_customer.html'>Add a Customer</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_book_to_sales.html'>Add Book to Sales</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/book_information.html'>View Books</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/view_genre.html'>Generes</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/authors.html'>Authors</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/sales.html'>Sales</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/sales_orders.html'>Sales Orders</a>
+</nav>
+  
+  <h2>Add a Genre</h2>
+
+  <form action="/" method="post">
+    <!-- Genre ID -->
+    <label for="genre_id">Genre ID:</label>
+    <input type="number" id="genre_id" name="genre_id" min="1" max="999999" required>
+    <br><br>
+
+    <!-- Genre Name -->
+    <label for="genre_name">Genre Name:</label>
+    <input type="text" id="genre_name" name="genre_name" required>
+    <br><br>
+
+    <!-- Genre Description -->
+    <label for="genre_description">Genre Description:</label>
+    <input type="text" id="genre_description" name="genre_description" required>
+    <br><br>
+
+    <!-- Submit button -->
+    <button type="submit">Add Genre</button>
+  </form>
+
+</body>
+</html>

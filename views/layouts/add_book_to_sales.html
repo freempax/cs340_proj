@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Book to Catalog</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/index.html'>Home</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_a_book.html'>Add a Book</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_a_sales_order.html'>Add an Order</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_a_genre.html'>Add a Genre</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_an_author.html'>Add an Author</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_a_customer.html'>Add a Customer</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/add_book_to_sales.html'>Add Book to Sales</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/book_information.html'>View Books</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/view_genre.html'>Generes</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/authors.html'>Authors</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/sales.html'>Sales</a>
+    <a href='/Users/edwintrinh/Desktop/black_hole/osu/cs340/project step 3/html/sales_orders.html'>Sales Orders</a>
+</nav>
+  
+  <h2>Add a Book to Sales</h2>
+
+  <form action="/" method="post">
+    <!-- Book ID -->
+    <label for="book_id">Book ID:</label>
+    <input type="number" id="book_id" name="book_id" min="1" max="999999" required>
+    <br><br>
+
+    <!-- Sale ID -->
+    <label for="sale_id">Sale ID:</label>
+    <input type="number" id="sale_id" name="sale_id" min="1" max="999999" required>
+    <br><br>
+
+    <!-- Customer ID -->
+    <label for="customer_id">Customer ID:</label>
+    <input type="number" id="customer_id" name="customer_id" min="1" max="999999" required>
+    <br><br>
+
+    <!-- Submit button -->
+    <button type="submit">Add Book to Sales</button>
+  </form>
+
+</body>
+</html>
