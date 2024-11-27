@@ -5,7 +5,7 @@
 // Express
 var express = require('express');
 var app = express();
-var PORT = 2055;
+var PORT = 2014;
 
 // Database
 var db = require('./database/db-connector');
@@ -15,6 +15,16 @@ var db = require('./database/db-connector');
 const { engine } = require('express-handlebars');
 app.engine('.hbs', engine({ extname: ".hbs" }));
 app.set('view engine', '.hbs');
+
+
+/* 
+Newly Added
+*/
+// Serve static files
+app.use(express.static('public'));
+
+// Parse form data
+app.use(express.urlencoded({ extended: false }))
 
 /*
     GET ROUTES
@@ -125,23 +135,92 @@ app.post('/add-author-form', function (req, res) {
     });
 });
 
-// Route to add a new genre
-app.post('/add-genre-form', function (req, res) {
-    let data = req.body;
 
-    let title = data['genre-title'];
-    let description = data['genre-description'];
+// Genres route
+app.get('/genres', async (req, res) => {
+    const [rows] = await pool.query('SELECT * FROM Genres');
+    res.render('genres', { data: rows });
+});
 
-    let genre_insert = `INSERT INTO Genres (title, description) VALUES (?, ?)`;
-    let values = [title, description];
+// Edit genre route
+// app.get('/edit-genre/:id', async (req, res) => {
+//     const genreId = req.params.id;
+//     const [rows] = await pool.query('SELECT * FROM Genres WHERE genre_id = ?', [genreId]);
 
-    db.pool.query(genre_insert, values, function (error, rows, fields) {
-        if (error) {
-            console.error('Database Error:', error);
-            res.status(400).send('Error adding genre.');
+//     if (rows.length === 0) {
+//         return res.sendStatus(404);
+//     }
+
+//     res.render('genres', { editGenre: rows[0], data: [] });
+// });
+
+app.post('/update-genre', (req, res) => {
+    const { genre_id, genre_title, genre_description } = req.body;
+
+    if (!genre_id || !genre_title || !genre_description) {
+        return res.status(400).send('Please provide a genre ID, title, and description.');
+    }
+
+    const updateQuery = 'UPDATE Genres SET title = ?, description = ? WHERE genre_id = ?';
+
+    pool.query(updateQuery, [genre_title, genre_description, genre_id])
+        .then(() => {
+            res.redirect('/genres');
+        })
+        .catch(err => {
+            console.error('Database error:', err);
+            res.status(500).send('Internal server error');
+        });
+});
+
+// Add genre route
+app.post('/add-genre-form', (req, res) => {
+    console.log(req.body); // Debugging: Log the request body to ensure the data is received
+
+    const { 'genre-title': genre_title, 'genre-description': genre_description } = req.body;
+
+    if (!genre_title || !genre_description) {
+        return res.status(400).send('Please provide a title and description for the genre.');
+    }
+
+    const insertQuery = 'INSERT INTO Genres (title, description) VALUES (?, ?)';
+
+    db.pool.query(insertQuery, [genre_title, genre_description], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            res.status(500).send('Internal server error');
         } else {
             res.redirect('/genres');
         }
+    });
+});
+
+
+// Update genre route
+app.post('/update-genre', async (req, res) => {
+    const { genre_id, genre_title, genre_description } = req.body;
+    await pool.query('UPDATE Genres SET title = ?, description = ? WHERE genre_id = ?', [genre_title, genre_description, genre_id]);
+    res.redirect('/genres');
+});
+
+// Delete genre route
+app.post('/delete-genre', (req, res) => {
+    const { genre_id } = req.body;
+
+    if (!genre_id) {
+        return res.status(400).send('Genre ID is required for deletion.');
+    }
+
+    const deleteQuery = 'DELETE FROM Genres WHERE genre_id = ?';
+
+    db.pool.query(deleteQuery, [genre_id], (error, results) => {
+        if (error) {
+            console.error('Error deleting genre:', error);
+            return res.status(500).send('Internal server error. Unable to delete genre.');
+        }
+
+        // Redirect back to genres page after successful deletion
+        res.redirect('/genres');
     });
 });
 
