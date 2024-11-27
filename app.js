@@ -120,46 +120,158 @@ app.post('/delete-book', function (req, res) {
 
 ///////////////Authors///////////////
 
-app.post('/add-author-form', function (req, res) {
-    let data = req.body;
+// app.post('/add-author-form', function (req, res) {
+//     let data = req.body;
 
-    let name = data['author-name'];
-    let description = data['author-description'];
+//     let name = data['author-name'];
+//     let description = data['author-description'];
 
-    let author_insert = `INSERT INTO Authors (name, description) VALUES (?, ?)`;
-    let values = [name, description];
+//     let author_insert = `INSERT INTO Authors (name, description) VALUES (?, ?)`;
+//     let values = [name, description];
 
-    db.pool.query(author_insert, values, function (error, rows, fields) {
+//     db.pool.query(author_insert, values, function (error, rows, fields) {
+//         if (error) {
+//             console.error('Database Error:', error);
+//             res.status(400).send('Error adding author. Please ensure all fields are correctly filled.');
+//         } else {
+//             res.redirect('/authors');
+//         }
+//     });
+// });
+
+// app.get('/authors', async (req, res) => {
+//     const [rows] = await pool.query('SELECT * FROM Authors');
+//     res.render('genres', { data: rows });
+// });
+
+// // Edit genre route
+// app.get('/edit-author/:id', async (req, res) => {
+//     const genreId = req.params.id;
+//     const [rows] = await pool.query('SELECT * FROM Authors WHERE author_id = ?', [authorId]);
+
+//     if (rows.length === 0) {
+//         return res.sendStatus(404);
+//     }
+
+//     res.render('authors', { editAuthor: rows[0], data: [] });
+// });
+
+// app.post('/author-genre', (req, res) => {
+//     const { author_id, author_name, author_description } = req.body;
+
+//     // Check if genre_id is present
+//     if (author_id) {
+//         // Update existing author
+//         const updateQuery = 'UPDATE Authors SET name = ?, description = ? WHERE author_id = ?';
+//         // ... (rest of the update logic)
+//     } else {
+//         // Add new author
+//         const insertQuery = 'INSERT INTO Authors (name, description) VALUES (?, ?)';
+//         // ... (rest of the insert logic)
+//     }
+
+//     // Handle success or error
+// });
+
+// // Add genre route
+// app.post('/add-author-form', (req, res) => {
+//     console.log(req.body); // Debugging: Log the request body to ensure the data is received
+
+//     const { 'author-title': author_title, 'author-description': author_description } = req.body;
+
+//     if (!author_title || !author_description) {
+//         return res.status(400).send('Please provide a title and description for the author.');
+//     }
+
+//     const insertQuery = 'INSERT INTO authors (name, description) VALUES (?, ?)';
+
+//     db.pool.query(insertQuery, [author_title, author_description], (err, results) => {
+//         if (err) {
+//             console.error('Database error:', err);
+//             res.status(500).send('Internal server error');
+//         } else {
+//             res.redirect('/authors');
+//         }
+//     });
+// });
+
+// //Get Author
+// app.get('/authors', async (req, res) => {
+//     const [rows] = await pool.query('SELECT * FROM Authors');
+//     res.render('genres', { data: rows });
+// });
+
+// // Edit genre route
+// app.get('/edit-author/:id', async (req, res) => {
+//     const genreId = req.params.id;
+//     const [rows] = await pool.query('SELECT * FROM Authors WHERE author_id = ?', [authorId]);
+
+//     if (rows.length === 0) {
+//         return res.sendStatus(404);
+//     }
+
+//     res.render('authors', { editAuthor: rows[0], data: [] });
+// });
+
+// app.post('/author-genre', (req, res) => {
+//     const { author_id, author_name, author_description } = req.body;
+
+//     // Check if genre_id is present
+//     if (author_id) {
+//         // Update existing author
+//         const updateQuery = 'UPDATE Authors SET name = ?, description = ? WHERE author_id = ?';
+//         // ... (rest of the update logic)
+//     } else {
+//         // Add new author
+//         const insertQuery = 'INSERT INTO Authors (name, description) VALUES (?, ?)';
+//         // ... (rest of the insert logic)
+//     }
+
+//     // Handle success or error
+// });
+
+
+
+
+
+
+// Get authors
+app.get('/authors', function (req, res) {
+    let get_authors = "SELECT * FROM Authors;";
+
+    db.pool.query(get_authors, function (error, authors, fields) {
         if (error) {
-            console.error('Database Error:', error);
-            res.status(400).send('Error adding author. Please ensure all fields are correctly filled.');
+            console.error(error);
+            res.sendStatus(400);
         } else {
-            res.redirect('/authors');
+            res.render('authors', { data: authors });
         }
     });
 });
 
-app.get('/authors', async (req, res) => {
-    const [rows] = await pool.query('SELECT * FROM Authors');
-    res.render('genres', { data: rows });
-});
+// app.get('/authors', async (req, res) => {
+//     const [rows] = await pool.query('SELECT * FROM authors');
+//     res.render('authors', { data: rows });
+// });
 
-// Edit genre route
+
+// Edit author route
 app.get('/edit-author/:id', async (req, res) => {
-    const genreId = req.params.id;
+    const authorId = req.params.id;
     const [rows] = await pool.query('SELECT * FROM Authors WHERE author_id = ?', [authorId]);
 
     if (rows.length === 0) {
         return res.sendStatus(404);
     }
 
-    res.render('authors', { editAuthor: rows[0], data: [] });
+    res.render('authors', { editauthor: rows[0], data: [] });
 });
 
-app.post('/author-genre', (req, res) => {
+// Update author
+app.post('/update-author', (req, res) => {
     const { author_id, author_name, author_description } = req.body;
 
-    // Check if genre_id is present
+    // Check if author_id is present
     if (author_id) {
         // Update existing author
         const updateQuery = 'UPDATE Authors SET name = ?, description = ? WHERE author_id = ?';
@@ -169,23 +281,21 @@ app.post('/author-genre', (req, res) => {
         const insertQuery = 'INSERT INTO Authors (name, description) VALUES (?, ?)';
         // ... (rest of the insert logic)
     }
-
-    // Handle success or error
 });
 
-// Add genre route
+// Add author route
 app.post('/add-author-form', (req, res) => {
     console.log(req.body); // Debugging: Log the request body to ensure the data is received
 
-    const { 'author-title': author_title, 'author-description': author_description } = req.body;
+    const { 'author-name': author_name, 'author-description': author_description } = req.body;
 
-    if (!author_title || !author_description) {
-        return res.status(400).send('Please provide a title and description for the author.');
+    if (!author_name || !author_description) {
+        return res.status(400).send('Please provide a name and description for the author.');
     }
 
-    const insertQuery = 'INSERT INTO authors (name, description) VALUES (?, ?)';
+    const insertQuery = 'INSERT INTO Authors (name, description) VALUES (?, ?)';
 
-    db.pool.query(insertQuery, [author_title, author_description], (err, results) => {
+    db.pool.query(insertQuery, [author_name, author_description], (err, results) => {
         if (err) {
             console.error('Database error:', err);
             res.status(500).send('Internal server error');
@@ -195,40 +305,42 @@ app.post('/add-author-form', (req, res) => {
     });
 });
 
-//Get Author
-app.get('/authors', async (req, res) => {
-    const [rows] = await pool.query('SELECT * FROM Authors');
-    res.render('genres', { data: rows });
+
+// Update author route
+app.post('/update-author', async (req, res) => {
+    const { author_id, author_title, author_description } = req.body;
+    await pool.query('UPDATE Authors SET name = ?, description = ? WHERE author_id = ?', [author_name, author_description, author_id]);
+    res.redirect('/authors');
 });
 
-// Edit genre route
-app.get('/edit-author/:id', async (req, res) => {
-    const genreId = req.params.id;
-    const [rows] = await pool.query('SELECT * FROM Authors WHERE author_id = ?', [authorId]);
+// Delete author route
+app.post('/delete-author', (req, res) => {
+    const { author_id } = req.body;
 
-    if (rows.length === 0) {
-        return res.sendStatus(404);
+    if (!author_id) {
+        return res.status(400).send('author ID is required for deletion.');
     }
 
-    res.render('authors', { editAuthor: rows[0], data: [] });
+    const deleteQuery = 'DELETE FROM Authors WHERE author_id = ?';
+
+    db.pool.query(deleteQuery, [author_id], (error, results) => {
+        if (error) {
+            console.error('Error deleting author:', error);
+            return res.status(500).send('Internal server error. Unable to delete author.');
+        }
+
+        // Redirect back to authors page after successful deletion
+        res.redirect('/authors');
+    });
 });
 
-app.post('/author-genre', (req, res) => {
-    const { author_id, author_name, author_description } = req.body;
 
-    // Check if genre_id is present
-    if (author_id) {
-        // Update existing author
-        const updateQuery = 'UPDATE Authors SET name = ?, description = ? WHERE author_id = ?';
-        // ... (rest of the update logic)
-    } else {
-        // Add new author
-        const insertQuery = 'INSERT INTO Authors (name, description) VALUES (?, ?)';
-        // ... (rest of the insert logic)
-    }
 
-    // Handle success or error
-});
+
+
+
+
+
 ///////////////Genres///////////////
 // Get Genres
 app.get('/genres', function (req, res) {
