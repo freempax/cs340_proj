@@ -120,121 +120,6 @@ app.post('/delete-book', function (req, res) {
 
 ///////////////Authors///////////////
 
-// app.post('/add-author-form', function (req, res) {
-//     let data = req.body;
-
-//     let name = data['author-name'];
-//     let description = data['author-description'];
-
-//     let author_insert = `INSERT INTO Authors (name, description) VALUES (?, ?)`;
-//     let values = [name, description];
-
-//     db.pool.query(author_insert, values, function (error, rows, fields) {
-//         if (error) {
-//             console.error('Database Error:', error);
-//             res.status(400).send('Error adding author. Please ensure all fields are correctly filled.');
-//         } else {
-//             res.redirect('/authors');
-//         }
-//     });
-// });
-
-// app.get('/authors', async (req, res) => {
-//     const [rows] = await pool.query('SELECT * FROM Authors');
-//     res.render('genres', { data: rows });
-// });
-
-// // Edit genre route
-// app.get('/edit-author/:id', async (req, res) => {
-//     const genreId = req.params.id;
-//     const [rows] = await pool.query('SELECT * FROM Authors WHERE author_id = ?', [authorId]);
-
-//     if (rows.length === 0) {
-//         return res.sendStatus(404);
-//     }
-
-//     res.render('authors', { editAuthor: rows[0], data: [] });
-// });
-
-// app.post('/author-genre', (req, res) => {
-//     const { author_id, author_name, author_description } = req.body;
-
-//     // Check if genre_id is present
-//     if (author_id) {
-//         // Update existing author
-//         const updateQuery = 'UPDATE Authors SET name = ?, description = ? WHERE author_id = ?';
-//         // ... (rest of the update logic)
-//     } else {
-//         // Add new author
-//         const insertQuery = 'INSERT INTO Authors (name, description) VALUES (?, ?)';
-//         // ... (rest of the insert logic)
-//     }
-
-//     // Handle success or error
-// });
-
-// // Add genre route
-// app.post('/add-author-form', (req, res) => {
-//     console.log(req.body); // Debugging: Log the request body to ensure the data is received
-
-//     const { 'author-title': author_title, 'author-description': author_description } = req.body;
-
-//     if (!author_title || !author_description) {
-//         return res.status(400).send('Please provide a title and description for the author.');
-//     }
-
-//     const insertQuery = 'INSERT INTO authors (name, description) VALUES (?, ?)';
-
-//     db.pool.query(insertQuery, [author_title, author_description], (err, results) => {
-//         if (err) {
-//             console.error('Database error:', err);
-//             res.status(500).send('Internal server error');
-//         } else {
-//             res.redirect('/authors');
-//         }
-//     });
-// });
-
-// //Get Author
-// app.get('/authors', async (req, res) => {
-//     const [rows] = await pool.query('SELECT * FROM Authors');
-//     res.render('genres', { data: rows });
-// });
-
-// // Edit genre route
-// app.get('/edit-author/:id', async (req, res) => {
-//     const genreId = req.params.id;
-//     const [rows] = await pool.query('SELECT * FROM Authors WHERE author_id = ?', [authorId]);
-
-//     if (rows.length === 0) {
-//         return res.sendStatus(404);
-//     }
-
-//     res.render('authors', { editAuthor: rows[0], data: [] });
-// });
-
-// app.post('/author-genre', (req, res) => {
-//     const { author_id, author_name, author_description } = req.body;
-
-//     // Check if genre_id is present
-//     if (author_id) {
-//         // Update existing author
-//         const updateQuery = 'UPDATE Authors SET name = ?, description = ? WHERE author_id = ?';
-//         // ... (rest of the update logic)
-//     } else {
-//         // Add new author
-//         const insertQuery = 'INSERT INTO Authors (name, description) VALUES (?, ?)';
-//         // ... (rest of the insert logic)
-//     }
-
-//     // Handle success or error
-// });
-
-
-
-
-
-
 // Get authors
 app.get('/authors', function (req, res) {
     let get_authors = "SELECT * FROM Authors;";
@@ -248,12 +133,6 @@ app.get('/authors', function (req, res) {
         }
     });
 });
-
-// app.get('/authors', async (req, res) => {
-//     const [rows] = await pool.query('SELECT * FROM authors');
-//     res.render('authors', { data: rows });
-// });
-
 
 // Edit author route
 app.get('/edit-author/:id', async (req, res) => {
@@ -338,9 +217,6 @@ app.post('/delete-author', (req, res) => {
 
 
 
-
-
-
 ///////////////Genres///////////////
 // Get Genres
 app.get('/genres', function (req, res) {
@@ -356,10 +232,6 @@ app.get('/genres', function (req, res) {
     });
 });
 
-// app.get('/genres', async (req, res) => {
-//     const [rows] = await pool.query('SELECT * FROM Genres');
-//     res.render('genres', { data: rows });
-// });
 
 
 // Edit genre route
@@ -441,6 +313,105 @@ app.post('/delete-genre', (req, res) => {
     });
 });
 
+///////////////Customers///////////////
+// Get customers
+app.get('/customers', function (req, res) {
+    let get_customers = "SELECT * FROM Customers;";
+
+    db.pool.query(get_customers, function (error, customers, fields) {
+        if (error) {
+            console.error(error);
+            res.sendStatus(400);
+        } else {
+            res.render('customers', { data: customers });
+        }
+    });
+});
+
+
+
+// Edit customer route
+app.get('/edit-customer/:id', async (req, res) => {
+    const customerId = req.params.id;
+    const [rows] = await pool.query('SELECT * FROM Customers WHERE customer_id = ?', [customerId]);
+
+    if (rows.length === 0) {
+        return res.sendStatus(404);
+    }
+
+    res.render('customers', { editCustomer: rows[0], data: [] });
+});
+
+// Update customer
+app.post('/update-customer', (req, res) => {
+    const { customer_id, customer_name, customer_email } = req.body;
+
+    // Check if customer_id is present
+    if (customer_id) {
+        // Update existing customer
+        const updateQuery = 'UPDATE Customers SET name = ?, email = ? WHERE customer_id = ?';
+        // ... (rest of the update logic)
+    } else {
+        // Add new customer
+        const insertQuery = 'INSERT INTO Customers (name, email) VALUES (?, ?)';
+        // ... (rest of the insert logic)
+    }
+});
+
+// Add customer route
+app.post('/add-customer-form', (req, res) => {
+    console.log(req.body); // Debugging: Log the request body to ensure the data is received
+
+    const { 'customer-name': customer_name, 'customer-email': customer_email } = req.body;
+
+    if (!customer_name || !customer_email) {
+        return res.status(400).send('Please provide a name and email for the customer.');
+    }
+
+    const insertQuery = 'INSERT INTO Customers (name, email) VALUES (?, ?)';
+
+    db.pool.query(insertQuery, [customer_name, customer_email], (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            res.status(500).send('Internal server error');
+        } else {
+            res.redirect('/customers');
+        }
+    });
+});
+
+
+// Update customer route
+app.post('/update-customer', async (req, res) => {
+    const { customer_id, customer_name, customer_email } = req.body;
+    await pool.query('UPDATE customers SET name = ?, email = ? WHERE customer_id = ?', [customer_name, customer_email, customer_id]);
+    res.redirect('/customers');
+});
+
+// Delete customer route
+app.post('/delete-customer', (req, res) => {
+    const { customer_id } = req.body;
+
+    if (!customer_id) {
+        return res.status(400).send('customer ID is required for deletion.');
+    }
+
+    const deleteQuery = 'DELETE FROM Customers WHERE customer_id = ?';
+
+    db.pool.query(deleteQuery, [customer_id], (error, results) => {
+        if (error) {
+            console.error('Error deleting customer:', error);
+            return res.status(500).send('Internal server error. Unable to delete customer.');
+        }
+
+        // Redirect back to customers page after successful deletion
+        res.redirect('/customers');
+    });
+});
+
+
+
+
 
 
 
@@ -451,6 +422,8 @@ app.post('/delete-genre', (req, res) => {
 app.listen(PORT, function () {
     console.log('Express started on http://10.162.0.184:' + PORT + '; press Ctrl-C to terminate.');
 });
+
+
 
 
 /*

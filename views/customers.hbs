@@ -1,0 +1,49 @@
+<h1>Customers</h1>
+
+{{#if editcustomer}}
+<form method="POST" action="/update-customer">
+    <input type="hidden" name="customer_id" value="{{editCustomer.customer_id}}">
+    <button type="submit">Update Customer</button>
+</form>
+{{else}}
+{{/if}}
+
+<!-- Customers Table -->
+<table border="1">
+    <thead>
+        <tr>
+            <th>Customer ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each data}}
+        <tr>
+            <td>{{this.customer_id}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.email}}</td>
+            <td>
+                <button type="button" onclick="window.location.href='/edit-customer/{{this.customer_id}}'">Edit</button>
+                <form method="POST" action="/delete-customer" style="display:inline;">
+                    <input type="hidden" name="customer_id" value="{{this.customer_id}}">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<!-- Form to Add a New customer -->
+<h2>Add a New Customer</h2>
+<form method="POST" action="/add-customer-form">
+    <label for="customer-name">Name:</label>
+    <input type="text" name="customer-name" id="customer-name" required>
+
+    <label for="customer-email">Email:</label>
+    <input type="text" name="customer-email" id="customer-email" required>
+
+    <input type="submit" value="Add Customer">
+</form>
