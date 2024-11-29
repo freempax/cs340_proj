@@ -3,18 +3,18 @@
 {{#if editauthor}}
 <form method="POST" action="/update-author">
     <input type="hidden" name="author_id" value="{{editauthor.author_id}}">
-    <button type="submit">Update Author</button>
+    <button type="submit">Update author</button>
 </form>
 {{else}}
 {{/if}}
 
-<!-- authors Table -->
+<!-- Authors Table -->
 <table border="1">
     <thead>
         <tr>
-            <th>Author ID</th>
-            <th>Name</th>
-            <th>Description</th>
+            <th>author ID</th>
+            <th>name</th>
+            <th>description</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -39,11 +39,13 @@
 <!-- Form to Add a New author -->
 <h2>Add a New author</h2>
 <form method="POST" action="/add-author-form">
-    <label for="author-name">Name:</label>
+    <label for="author-name">Title:</label>
     <input type="text" name="author-name" id="author-name" required>
 
     <label for="author-description">Description:</label>
     <input type="text" name="author-description" id="author-description">
 
-    <input type="submit" value="Add author">
+    
+
+    <input type="submit" value="Add Author">
 </form>

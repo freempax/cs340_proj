@@ -1,160 +1,18 @@
-<h1>Books</h1>
-
-<!-- Books Table -->
-<table>
-    <thead>
-        <tr>
-            {{!-- <th>Book ID</th>
-            <th>Title</th>
-            <th>Author ID</th>
-            <th>Genre ID</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Edit/Delete Actions</th> <!-- Old Design before loop  --> --}} 
-            {{#each data.[0]}}
-            <th>
-                {{@key}}
-            </th>
-            {{/each}}
-            <th>Edit</th>
-            <th>Delete</th>
-
-        </tr>
-    </thead>
-    <tbody>
-        {{#each data}}
-        <tr>
-            <td>{{this.book_id}}</td>
-            <td>{{this.title}}</td>
-            <td>{{this.author_id}}</td>
-            <td>{{this.genre_id}}</td>
-            <td>{{this.price}}</td>
-            <td>{{this.quantity}}</td>
-            <td>
-                <!-- Edit Button -->
-                <button onclick="openEditModal(this)" 
-                data-book_id="{{this.book_id}}" 
-                data-title="{{this.title}}"
-                data-author_id="{{this.author_id}}" 
-                data-genre_id="{{this.genre_id}}" 
-                data-price="{{this.price}}"
-                data-quantity="{{this.quantity}}">
-                Edit
-                </button>
-
-                
-                <!-- Delete Button -->
-                <form method="POST" action="/delete-book" style="display;">
-                    <input type="hidden" name="book_id" value="{{this.book_id}}">
-                    <input type="submit" value="Delete"
-                        onclick="return confirm('Are you sure you want to delete this book? ');">
-                </form>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
-
-<!-- Edit Book Modal -->
-<div id="editModal" style="display:none;">
-    <div class="modal-content">
-        <span id="closeModal" style="float:right;cursor:pointer;">&times;</span>
-        <h2>Edit Book</h2>
-        <form id="edit-book-form" method="POST" action="/edit-book">
-            <input type="hidden" name="book_id" id="edit-book-id">
-            <label for="edit-title">Title:</label>
-            <input type="text" name="title" id="edit-title" required>
-
-            <label for="edit-author_id">Author:</label>
-            <select name="author_id" id="edit-author_id" required>
-                <option value="">--Select Author--</option>
-                {{#each authors}}
-                <option value="{{this.author_id}}">{{this.name}}</option>
-                {{/each}}
-            </select>
-
-            <label for="edit-genre_id">Genre:</label>
-            <select name="genre_id" id="edit-genre_id" required>
-                <option value="">--Select Genre--</option>
-                {{#each genres}}
-                <option value="{{this.genre_id}}">{{this.title}}</option>
-                {{/each}}
-            </select>
-
-            <label for="edit-price">Price:</label>
-            <input type="number" step="0.01" name="price" id="edit-price" required>
-
-            <label for="edit-quantity">Quantity:</label>
-            <input type="number" name="quantity" id="edit-quantity" required>
-
-            <input type="submit" value="Update Book">
-        </form>
-    </div>
-</div>
-
-<!-- Form to Add a New Book -->
-<h2>Add a New Book</h2>
-<form id="add-book-form" method="POST" action="/add-book-form">
-    <label for="input-title">Title:</label>
-    <input type="text" name="input-title" id="input-title" required>
-
-    <label for="input-author_id">Author:</label>
-    <select name="author_id" id="input-author_id" required>
-        <option value="">--Select Author--</option>
-        {{#each authors}}
-        <option value="{{this.author_id}}">{{this.name}}</option>
-        {{/each}}
-    </select>
-
-    <label for="input-genre_id">Genre:</label>
-    <select name="genre_id" id="input-genre_id" required>
-        <option value="">--Select Genre--</option>
-        {{#each genres}}
-        <option value="{{this.genre_id}}">{{this.title}}</option>
-        {{/each}}
-    </select>
-
-    <label for="input-price">Price:</label>
-    <input type="number" step="0.01" name="price" id="input-price" required>
-
-    <label for="input-quantity">Quantity:</label>
-    <input type="number" name="quantity" id="input-quantity" required>
-
-    <input type="submit" value="Submit">
-</form>
-
-<!-- JavaScript Functions -->
-<script>
-    function openEditModal(button) {
-        // Get the book data from the button's data attributes
-        var book_id = button.getAttribute('data-book_id');
-        var title = button.getAttribute('data-title');
-        var author_id = button.getAttribute('data-author_id');
-        var genre_id = button.getAttribute('data-genre_id');
-        var price = button.getAttribute('data-price');
-        var quantity = button.getAttribute('data-quantity');
-
-        // Populate the form fields with the existing book data
-        document.getElementById('edit-book-id').value = book_id;
-        document.getElementById('edit-title').value = title;
-        document.getElementById('edit-author_id').value = author_id;
-        document.getElementById('edit-genre_id').value = genre_id;
-        document.getElementById('edit-price').value = price;
-        document.getElementById('edit-quantity').value = quantity;
-
-        // Display the modal
-        document.getElementById('editModal').style.display = 'block';
-    }
-
-    // Close the modal when the user clicks on the 'x'
-    document.getElementById('closeModal').onclick = function () {
-        document.getElementById('editModal').style.display = 'none';
-    };
-
-    // Close the modal when the user clicks outside the modal content
-    window.onclick = function (event) {
-        if (event.target == document.getElementById('editModal')) {
-            document.getElementById('editModal').style.display = 'none';
-        }
-    };
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore Management</title>
+</head>
+<body>
+    <h1>Bookstore Management System</h1>
+    <ul>
+        <li><a href="/customers">Manage Customers</a></li>
+        <li><a href="/books">Manage Books</a></li>
+        <li><a href="/authors">Manage Authors</a></li>
+        <li><a href="/genres">Manage Genres</a></li>
+        <li><a href="/sales">Manage Sales</a></li>
+    </ul>
+</body>
+</html>

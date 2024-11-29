@@ -1,49 +1,85 @@
-<h1>Customers</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers</title>
+    <script>
+        function showEditForm(button) {
+            // Get row data from the button's dataset
+            const customerId = button.dataset.customerId;
+            const name = button.dataset.name;
+            const email = button.dataset.email;
 
-{{#if editcustomer}}
-<form method="POST" action="/update-customer">
-    <input type="hidden" name="customer_id" value="{{editCustomer.customer_id}}">
-    <button type="submit">Update Customer</button>
-</form>
-{{else}}
-{{/if}}
+            // Populate the form fields with the row data
+            document.getElementById('edit-customer-id').value = customerId;
+            document.getElementById('edit-name').value = name;
+            document.getElementById('edit-email').value = email;
 
-<!-- Customers Table -->
-<table border="1">
-    <thead>
-        <tr>
-            <th>Customer ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each data}}
-        <tr>
-            <td>{{this.customer_id}}</td>
-            <td>{{this.name}}</td>
-            <td>{{this.email}}</td>
-            <td>
-                <button type="button" onclick="window.location.href='/edit-customer/{{this.customer_id}}'">Edit</button>
-                <form method="POST" action="/delete-customer" style="display:inline;">
-                    <input type="hidden" name="customer_id" value="{{this.customer_id}}">
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+            // Scroll to the form if needed
+            document.getElementById('edit-form').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</head>
+<body>
+    <h1>Customers</h1>
 
-<!-- Form to Add a New customer -->
-<h2>Add a New Customer</h2>
-<form method="POST" action="/add-customer-form">
-    <label for="customer-name">Name:</label>
-    <input type="text" name="customer-name" id="customer-name" required>
+    <!-- Customers Table -->
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each data}}
+            <tr>
+                <td>{{this.customer_id}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.email}}</td>
+                <td>
+                    <button 
+                        onclick="showEditForm(this)" 
+                        data-customer-id="{{this.customer_id}}" 
+                        data-name="{{this.name}}" 
+                        data-email="{{this.email}}">
+                        Edit
+                    </button>
+                </td>
+                <td>
+                    <form method="POST" action="/delete-customer">
+                        <input type="hidden" name="customer_id" value="{{this.customer_id}}">
+                        <button type="submit" onclick="return confirm('Are you sure you want to delete this customer?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 
-    <label for="customer-email">Email:</label>
-    <input type="text" name="customer-email" id="customer-email" required>
+    <!-- Edit Customer Form -->
+    <h2>Edit Customer</h2>
+    <form id="edit-form" method="POST" action="/edit-customer">
+        <input type="hidden" name="customer_id" id="edit-customer-id">
+        <label for="edit-name">Name:</label>
+        <input type="text" name="name" id="edit-name" required>
+        <label for="edit-email">Email:</label>
+        <input type="email" name="email" id="edit-email" required>
+        <button type="submit">Update Customer</button>
+    </form>
 
-    <input type="submit" value="Add Customer">
-</form>
+    <!-- Add Customer Form -->
+    <h2>Add Customer</h2>
+    <form id="add-customer-form" method="POST" action="/add-customer">
+        <label for="add-name">Name:</label>
+        <input type="text" name="name" id="add-name" required>
+        <label for="add-email">Email:</label>
+        <input type="email" name="email" id="add-email" required>
+        <button type="submit">Add Customer</button>
+    </form>
+</body>
+</html>
