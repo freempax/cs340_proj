@@ -108,20 +108,20 @@
             <input type="text" name="title" id="edit-title" required>
 
         <label for="edit-author_id">Author:</label>
-<select name="author_id" id="edit-author_id" required>
+    <select name="author_id" id="edit-author_id" required>
     <option value="">--Select Author--</option>
-    {{#each authors}}
-    <option value="{{this.author_id}}">{{this.name}}</option>
+        {{#each authors}}
+        <option value="{{this.author_id}}">{{this.name}}</option>
     {{/each}}
-</select>
+    </select>
 
-<label for="edit-genre_id">Genre:</label>
-<select name="genre_id" id="edit-genre_id" required>
-    <option value="">--Select Genre--</option>
-    {{#each genres}}
+    <label for="edit-genre_id">Genre:</label>
+    <select name="genre_id" id="edit-genre_id" required>
+        <option value="">--Select Genre--</option>
+        {{#each genres}}
     <option value="{{this.genre_id}}">{{this.title}}</option>
-    {{/each}}
-</select>
+        {{/each}}
+    </select>
 
         </select>
             <label for="edit-price">Price:</label>

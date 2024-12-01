@@ -16,8 +16,6 @@
             document.getElementById('edit-author-id').value = authorId;
             document.getElementById('edit-name').value = name;
             document.getElementById('edit-description').value = description;
-
-            // Scroll to the form if needed
             document.getElementById('edit-form').scrollIntoView({ behavior: 'smooth' });
         }
     </script>
@@ -68,7 +66,7 @@
         <label for="edit-name">Name:</label>
         <input type="text" name="name" id="edit-name" required>
         <label for="edit-description">Description:</label>
-        <input type="text" name="description" id="edit-description" required>
+        <input type="text" name="description" id="edit-description">
         <button type="submit">Update author</button>
     </form>
 
