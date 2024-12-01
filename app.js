@@ -197,20 +197,54 @@ app.post('/delete-book', (req, res) => {
 // Authors 
 
 // Genres 
+app.get('/genres', (req, res) => {
+    db.pool.query('SELECT * FROM Genres', (err, results) => {
+        if (err) return res.status(500).send(err);
+        res.render('genres', { data: results });
+    });
+});
+
+app.post('/add-genre', (req, res) => {
+    const { title, description } = req.body;
+    db.pool.query('INSERT INTO Genres (title, description) VALUES (?, ?)', [title, description], (err) => {
+        if (err) return res.status(500).send(err);
+        res.redirect('/genres');
+    });
+});
+
+app.post('/edit-genre', (req, res) => {
+    const { genre_id, title, description } = req.body;
+    db.pool.query(
+        'UPDATE Genres SET title = ?, description = ? WHERE genre_id = ?',
+        [title, description, genre_id],
+        (err) => {
+            if (err) return res.status(500).send(err);
+            res.redirect('/genres');
+        }
+    );
+});
+
+app.post('/delete-genre', (req, res) => {
+    const { genre_id } = req.body;
+    db.pool.query('DELETE FROM Genres WHERE genre_id = ?', [genre_id], (err) => {
+        if (err) return res.status(500).send(err);
+        res.redirect('/genres');
+    });
+});
 
 // Sales
 app.get('/sales', (req, res) => {
     const getSales = 'SELECT * FROM Sales';
-    const getCustomers = 'SELECT * FROM Customers';
+    const getGenres = 'SELECT * FROM Genres';
     const getBooks = 'SELECT * FROM Books';
 
     db.pool.query(getSales, (err, sales) => {
         if (err) return res.status(500).send(err);
-        db.pool.query(getCustomers, (err, customers) => {
+        db.pool.query(getGenres, (err, genres) => {
             if (err) return res.status(500).send(err);
             db.pool.query(getBooks, (err, books) => {
                 if (err) return res.status(500).send(err);
-                res.render('sales', { sales, customers, books });
+                res.render('sales', { sales, genres, books });
             });
         });
     });
