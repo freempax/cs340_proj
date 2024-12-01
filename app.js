@@ -20,6 +20,13 @@ app.set('view engine', '.hbs');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }))
 
+const Handlebars = require('handlebars');
+
+// Register the `ifEquals` helper
+Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+    return arg1 == arg2 ? options.fn(this) : options.inverse(this);
+});
+
 
 // Index
 app.get('/', (req, res) => {
@@ -30,7 +37,7 @@ app.get('/', (req, res) => {
 
 // Customers
 app.get('/customers', (req, res) => {
-    db.pool.query('SELECT * FROM Customers', (err, results) => {
+    db.pool.query('select * from Customers', (err, results) => {
         if (err) return res.status(500).send(err);
         res.render('customers', { data: results });
     });
@@ -58,7 +65,7 @@ app.post('/edit-customer', (req, res) => {
 
 app.post('/delete-customer', (req, res) => {
     const { customer_id } = req.body;
-    db.pool.query('DELETE FROM Customers WHERE customer_id = ?', [customer_id], (err) => {
+    db.pool.query('DELETE from Customers WHERE customer_id = ?', [customer_id], (err) => {
         if (err) return res.status(500).send(err);
         res.redirect('/customers');
     });
@@ -67,17 +74,21 @@ app.post('/delete-customer', (req, res) => {
 // Books
 app.get('/books', (req, res) => {
     const getBooksQuery = `
-        SELECT Books.book_id, Books.title, Books.price, Books.quantity,
-               Authors.name AS author_name, Genres.title AS genre_title
-        FROM Books
+        select Books.book_id, 
+        Books.title, 
+        Books.price, 
+        Books.quantity,
+        Authors.name AS author_name, 
+        Genres.title AS genre_title
+        from Books
         JOIN Authors ON Books.author_id = Authors.author_id
         JOIN Genres ON Books.genre_id = Genres.genre_id
     `;
     db.pool.query(getBooksQuery, (err, books) => {
         if (err) return res.status(500).send(err);
-        db.pool.query('SELECT * FROM Authors', (err, authors) => {
+        db.pool.query('select * from Authors', (err, authors) => {
             if (err) return res.status(500).send(err);
-            db.pool.query('SELECT * FROM Genres', (err, genres) => {
+            db.pool.query('select * from Genres', (err, genres) => {
                 if (err) return res.status(500).send(err);
                 res.render('books', { books, authors, genres });
             });
@@ -85,7 +96,9 @@ app.get('/books', (req, res) => {
     });
 });
 
-// Add a new book
+
+
+
 app.post('/add-book', (req, res) => {
     const { title, author_id, genre_id, price, quantity } = req.body;
     const addBookQuery = `
@@ -98,7 +111,6 @@ app.post('/add-book', (req, res) => {
     });
 });
 
-// Edit an existing book
 app.post('/edit-book', (req, res) => {
     const { book_id, title, author_id, genre_id, price, quantity } = req.body;
     const editBookQuery = `
@@ -115,7 +127,7 @@ app.post('/edit-book', (req, res) => {
 // Delete a book
 app.post('/delete-book', (req, res) => {
     const { book_id } = req.body;
-    const deleteBookQuery = 'DELETE FROM Books WHERE book_id = ?';
+    const deleteBookQuery = 'DELETE from Books WHERE book_id = ?';
     db.pool.query(deleteBookQuery, [book_id], (err) => {
         if (err) return res.status(500).send(err);
         res.redirect('/books');
@@ -126,7 +138,7 @@ app.post('/delete-book', (req, res) => {
 
 // Authors 
 app.get('/authors', (req, res) => {
-    db.pool.query('SELECT * FROM Authors', (err, results) => {
+    db.pool.query('select * from Authors', (err, results) => {
         if (err) return res.status(500).send(err);
         res.render('authors', { data: results });
     });
@@ -154,7 +166,7 @@ app.post('/edit-author', (req, res) => {
 
 app.post('/delete-author', (req, res) => {
     const { author_id } = req.body;
-    db.pool.query('DELETE FROM Authors WHERE author_id = ?', [author_id], (err) => {
+    db.pool.query('DELETE from Authors WHERE author_id = ?', [author_id], (err) => {
         if (err) return res.status(500).send(err);
         res.redirect('/authors');
     });
@@ -163,7 +175,7 @@ app.post('/delete-author', (req, res) => {
 
 // Genres 
 app.get('/genres', (req, res) => {
-    db.pool.query('SELECT * FROM Genres', (err, results) => {
+    db.pool.query('select * from Genres', (err, results) => {
         if (err) return res.status(500).send(err);
         res.render('genres', { data: results });
     });
@@ -191,7 +203,7 @@ app.post('/edit-genre', (req, res) => {
 
 app.post('/delete-genre', (req, res) => {
     const { genre_id } = req.body;
-    db.pool.query('DELETE FROM Genres WHERE genre_id = ?', [genre_id], (err) => {
+    db.pool.query('DELETE from Genres WHERE genre_id = ?', [genre_id], (err) => {
         if (err) return res.status(500).send(err);
         res.redirect('/genres');
     });
@@ -210,9 +222,9 @@ app.get('/sales', (req, res) => {
     `;
     db.pool.query(getSalesQuery, (err, sales) => {
         if (err) return res.status(500).send(err);
-        db.pool.query('SELECT * FROM Customers', (err, customers) => {
+        db.pool.query('select * from Customers', (err, customers) => {
             if (err) return res.status(500).send(err);
-            db.pool.query('SELECT * FROM Books', (err, books) => {
+            db.pool.query('select * from Books', (err, books) => {
                 if (err) return res.status(500).send(err);
                 res.render('sales', { sales, customers, books });
             });
@@ -261,7 +273,7 @@ app.post('/edit-sale', (req, res) => {
 // Delete a Sale
 app.post('/delete-sale', (req, res) => {
     const { sale_id } = req.body;
-    const deleteSaleQuery = 'DELETE FROM Sales WHERE sale_id = ?';
+    const deleteSaleQuery = 'DELETE from Sales WHERE sale_id = ?';
     db.pool.query(deleteSaleQuery, [sale_id], (err) => {
         if (err) return res.status(500).send(err);
         res.redirect('/sales');

@@ -34,8 +34,8 @@ Create or Replace Table `Books` (
   PRIMARY KEY (`book_id`),
   KEY `author_id` (`author_id`),
   KEY `genre_id` (`genre_id`),
-  CONSTRAINT `Books_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `Authors` (`author_id`),
-  CONSTRAINT `Books_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `Genres` (`genre_id`)
+  CONSTRAINT `Books_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `Authors` (`author_id`) ON DELETE CASCADE,
+  CONSTRAINT `Books_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `Genres` (`genre_id`) ON DELETE CASCADE
 );
 
 -- Table structure for table `Sales`
@@ -49,24 +49,25 @@ Create or Replace Table `Sales` (
   PRIMARY KEY (`sale_id`),
   KEY `customer_id` (`customer_id`),
   KEY `book_id` (`book_id`),
-  CONSTRAINT `Sales_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `Customers` (`customer_id`),
-  CONSTRAINT `Sales_ibfk_2` FOREIGN KEY (`book_id`) REFERENCES `Books` (`book_id`)
+  CONSTRAINT `Sales_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `Customers` (`customer_id`) ON DELETE CASCADE,
+  CONSTRAINT `Sales_ibfk_2` FOREIGN KEY (`book_id`) REFERENCES `Books` (`book_id`) ON DELETE CASCADE
 );
 
 -- Table structure for table `Books_has_Sales`
-Create or Replace Table `Books_has_Sales` (
+Create or Replace TABLE `Books_has_Sales` (
   `Books_book_id` int NOT NULL,
   `Sales_sale_id` int NOT NULL,
   `Sales_customer_id` int NOT NULL,
   PRIMARY KEY (`Books_book_id`, `Sales_sale_id`, `Sales_customer_id`),
   KEY `Sales_sale_id` (`Sales_sale_id`),
   KEY `Sales_customer_id` (`Sales_customer_id`),
-  CONSTRAINT `Books_has_Sales_ibfk_1` FOREIGN KEY (`Books_book_id`) REFERENCES `Books` (`book_id`),
-  CONSTRAINT `Books_has_Sales_ibfk_2` FOREIGN KEY (`Sales_sale_id`) REFERENCES `Sales` (`sale_id`),
-  CONSTRAINT `Books_has_Sales_ibfk_3` FOREIGN KEY (`Sales_customer_id`) REFERENCES `Customers` (`customer_id`)
+  CONSTRAINT `Books_has_Sales_ibfk_1` FOREIGN KEY (`Books_book_id`) REFERENCES `Books` (`book_id`) ON DELETE CASCADE,
+  CONSTRAINT `Books_has_Sales_ibfk_2` FOREIGN KEY (`Sales_sale_id`) REFERENCES `Sales` (`sale_id`) ON DELETE CASCADE,
+  CONSTRAINT `Books_has_Sales_ibfk_3` FOREIGN KEY (`Sales_customer_id`) REFERENCES `Customers` (`customer_id`) ON DELETE CASCADE
 );
 
 COMMIT;
+
 
 -- Entries for the Authors Table
 INSERT INTO Authors (author_id, name, description)

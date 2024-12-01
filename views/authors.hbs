@@ -1,51 +1,86 @@
-<h1>Authors</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-{{#if editauthor}}
-<form method="POST" action="/update-author">
-    <input type="hidden" name="author_id" value="{{editauthor.author_id}}">
-    <button type="submit">Update author</button>
-</form>
-{{else}}
-{{/if}}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authors</title>
+    <script>
+        function showEditForm(button) {
+            // Get row data from the button's dataset
+            const authorId = button.dataset.authorId;
+            const name = button.dataset.name;
+            const description = button.dataset.description;
 
-<!-- Authors Table -->
-<table border="1">
-    <thead>
-        <tr>
-            <th>author ID</th>
-            <th>name</th>
-            <th>description</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each data}}
-        <tr>
-            <td>{{this.author_id}}</td>
-            <td>{{this.name}}</td>
-            <td>{{this.description}}</td>
-            <td>
-                <button type="button" onclick="window.location.href='/edit-author/{{this.author_id}}'">Edit</button>
-                <form method="POST" action="/delete-author" style="display:inline;">
-                    <input type="hidden" name="author_id" value="{{this.author_id}}">
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+            // Populate the form fields with the row data
+            document.getElementById('edit-author-id').value = authorId;
+            document.getElementById('edit-name').value = name;
+            document.getElementById('edit-description').value = description;
 
-<!-- Form to Add a New author -->
-<h2>Add a New author</h2>
-<form method="POST" action="/add-author-form">
-    <label for="author-name">Title:</label>
-    <input type="text" name="author-name" id="author-name" required>
+            // Scroll to the form if needed
+            document.getElementById('edit-form').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</head>
 
-    <label for="author-description">Description:</label>
-    <input type="text" name="author-description" id="author-description">
+<body>
+    <h1>Authors</h1>
 
-    
+    <!-- authors Table -->
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Author ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each data}}
+            <tr>
+                <td>{{this.author_id}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.description}}</td>
+                <td>
+                    <button onclick="showEditForm(this)" data-author-id="{{this.author_id}}"
+                        data-name="{{this.name}}" data-description="{{this.description}}">
+                        Edit
+                    </button>
+                </td>
+                <td>
+                    <form method="POST" action="/delete-author">
+                        <input type="hidden" name="author_id" value="{{this.author_id}}">
+                        <button type="submit"
+                            onclick="return confirm('Are you sure you want to delete this author?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 
-    <input type="submit" value="Add Author">
-</form>
+    <!-- Edit author Form -->
+    <h2>Edit author</h2>
+    <form id="edit-form" method="POST" action="/edit-author">
+        <input type="hidden" name="author_id" id="edit-author-id">
+        <label for="edit-name">Name:</label>
+        <input type="text" name="name" id="edit-name" required>
+        <label for="edit-description">Description:</label>
+        <input type="text" name="description" id="edit-description" required>
+        <button type="submit">Update author</button>
+    </form>
+
+    <!-- Add author Form -->
+    <h2>Add author</h2>
+    <form id="add-author-form" method="POST" action="/add-author">
+        <label for="add-name">Name:</label>
+        <input type="text" name="name" id="add-title" required>
+        <label for="add-description">Description:</label>
+        <input type="text" name="description" id="add-description">
+        <button type="submit">Add author</button>
+    </form>
+</body>
+
+</html>

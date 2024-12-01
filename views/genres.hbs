@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>genres</title>
+    <title>Genres</title>
     <script>
         function showEditForm(button) {
             // Get row data from the button's dataset
@@ -16,15 +16,13 @@
             document.getElementById('edit-genre-id').value = genreId;
             document.getElementById('edit-title').value = title;
             document.getElementById('edit-description').value = description;
-
-            // Scroll to the form if needed
             document.getElementById('edit-form').scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </head>
 
 <body>
-    <h1>genres</h1>
+    <h1>Genres</h1>
 
     <!-- genres Table -->
     <table border="1">
@@ -61,26 +59,25 @@
         </tbody>
     </table>
 
-    <!-- Edit genre Form -->
-    <h2>Edit genre</h2>
+    <!-- Edit Genre Form -->
+    <h2>Edit Genre</h2>
     <form id="edit-form" method="POST" action="/edit-genre">
         <input type="hidden" name="genre_id" id="edit-genre-id">
         <label for="edit-title">Title:</label>
         <input type="text" name="title" id="edit-title" required>
         <label for="edit-description">Description:</label>
         <input type="text" name="description" id="edit-description" required>
-        <button type="submit">Update genre</button>
+        <button type="submit">Update Genre</button>
     </form>
 
-    <!-- Add genre Form -->
-    <h2>Add genre</h2>
+    <!-- Add Genre Form -->
+    <h2>Add Genre</h2>
     <form id="add-genre-form" method="POST" action="/add-genre">
         <label for="add-title">Title:</label>
         <input type="text" name="title" id="add-title" required>
         <label for="add-description">Description:</label>
         <input type="text" name="description" id="add-description" required>
-        <button type="submit">Add genre</button>
+        <button type="submit">Add Genre</button>
     </form>
 </body>
-
 </html>

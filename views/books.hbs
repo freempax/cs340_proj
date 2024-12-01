@@ -4,31 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Books</title>
+
     <script>
-        function showEditForm(button) {
-            // Retrieve data attributes from the clicked button
-            const bookId = button.dataset.bookId;
-            const title = button.dataset.title;
-            const authorId = button.dataset.authorId;
-            const genreId = button.dataset.genreId;
-            const price = button.dataset.price;
-            const quantity = button.dataset.quantity;
+    function showEditForm(button) {
+        // Retrieve data attributes from the clicked button
+        const bookId = button.dataset.bookId;
+        const title = button.dataset.title;
+        const authorId = button.dataset.authorId;
+        const genreId = button.dataset.genreId;
+        const price = button.dataset.price;
+        const quantity = button.dataset.quantity;
 
-            // Populate the edit form fields with the retrieved data
-            document.getElementById('edit-book-id').value = bookId;
-            document.getElementById('edit-title').value = title;
-            document.getElementById('edit-author_id').value = authorId;
-            document.getElementById('edit-genre_id').value = genreId;
-            document.getElementById('edit-price').value = price;
-            document.getElementById('edit-quantity').value = quantity;
+        // Populate the edit form fields
+        document.getElementById('edit-book-id').value = bookId;
+        document.getElementById('edit-title').value = title;
+        document.getElementById('edit-price').value = price;
+        document.getElementById('edit-quantity').value = quantity;
 
-            // Display the edit form
-            document.getElementById('edit-form').style.display = 'block';
-
-            // Scroll to the edit form smoothly
-            document.getElementById('edit-form').scrollIntoView({ behavior: 'smooth' });
+        // Set the selected author in the dropdown
+        const authorDropdown = document.getElementById('edit-author_id');
+        for (let option of authorDropdown.options) {
+            if (option.value === authorId) {
+                option.selected = true;
+                break;
+            }
         }
-    </script>
+
+        // Set the selected genre in the dropdown
+        const genreDropdown = document.getElementById('edit-genre_id');
+        for (let option of genreDropdown.options) {
+            if (option.value === genreId) {
+                option.selected = true;
+                break;
+            }
+        }
+
+        // Display the edit form
+        document.getElementById('edit-form').style.display = 'block';
+        document.getElementById('edit-form').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+
+
+
 </head>
 <body>
     <h1>Books</h1>
@@ -88,22 +107,23 @@
             <label for="edit-title">Title:</label>
             <input type="text" name="title" id="edit-title" required>
 
-            <label for="edit-author_id">Author:</label>
-            <select name="author_id" id="edit-author_id" required>
-                <option value="">--Select Author--</option>
-                {{#each authors}}
-                <option value="{{this.author_id}}">{{this.name}}</option>
-                {{/each}}
-            </select>
+        <label for="edit-author_id">Author:</label>
+<select name="author_id" id="edit-author_id" required>
+    <option value="">--Select Author--</option>
+    {{#each authors}}
+    <option value="{{this.author_id}}">{{this.name}}</option>
+    {{/each}}
+</select>
 
-            <label for="edit-genre_id">Genre:</label>
-            <select name="genre_id" id="edit-genre_id" required>
-                <option value="">--Select Genre--</option>
-                {{#each genres}}
-                <option value="{{this.genre_id}}">{{this.title}}</option>
-                {{/each}}
-            </select>
+<label for="edit-genre_id">Genre:</label>
+<select name="genre_id" id="edit-genre_id" required>
+    <option value="">--Select Genre--</option>
+    {{#each genres}}
+    <option value="{{this.genre_id}}">{{this.title}}</option>
+    {{/each}}
+</select>
 
+        </select>
             <label for="edit-price">Price:</label>
             <input type="number" step="0.01" name="price" id="edit-price" required>
 
