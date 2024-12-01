@@ -12,14 +12,20 @@ var db = require('./database/db-connector');
 
 // Handlebars
 const { engine } = require('express-handlebars');
-app.engine('.hbs', engine({ extname: ".hbs" }));
+const moment = require('moment');
+app.engine('.hbs', engine({ 
+    extname: ".hbs", 
+    helpers: {formatDate: (date) => moment(date).format('YYYY-MM-DD')} })); // Used to handle Date Entries
 app.set('view engine', '.hbs');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }))
 
+
+// Index
 app.get('/', (req, res) => {
     res.render('index');
 });
+
 
 
 // Customers
@@ -58,83 +64,7 @@ app.post('/delete-customer', (req, res) => {
     });
 });
 
-
 // Books
-
-// Books Routes
-
-// Display all books
-// app.get('/books', (req, res) => {
-//     const getBooksQuery = `
-//         SELECT Books.book_id, Books.title, Books.price, Books.quantity,
-//                Authors.name AS author_name, Genres.title AS genre_title
-//         FROM Books
-//         JOIN Authors ON Books.author_id = Authors.author_id
-//         JOIN Genres ON Books.genre_id = Genres.genre_id`;
-//     db.pool.query(getBooksQuery, (err, books) => {
-//         if (err) return res.status(
-
-// app.get('/books', (req, res) => {
-//     const getBooks = 'SELECT * FROM Books';
-//     const getAuthors = 'SELECT * FROM Authors';
-//     const getGenres = 'SELECT * FROM Genres';
-
-//     db.pool.query(getBooks, (err, books) => {
-//         if (err) return res.status(500).send(err);
-//         db.pool.query(getAuthors, (err, authors) => {
-//             if (err) return res.status(500).send(err);
-//             db.pool.query(getGenres, (err, genres) => {
-//                 if (err) return res.status(500).send(err);
-//                 res.render('books', { books, authors, genres });
-//             });
-//         });
-//     });
-// });
-
-
-// app.get('/books', (req, res) => {
-//     db.pool.query('SELECT * FROM Books', (err, results) => {
-//         if (err) return res.status(500).send(err);
-//         res.render('books', { data: results });
-//     });
-// });
-
-// app.post('/add-book', (req, res) => {
-//     const { book_id, title, author_id, genre_id, price, quantity } = req.body;
-//     db.pool.query('INSERT INTO books (name, email) VALUES (?, ?)', [book_id, title, author_id, genre_id, price, quantity], (err) => {
-//         if (err) return res.status(500).send(err);
-//         res.redirect('/books');
-//     });
-// });
-
-// app.post('/edit-book', (req, res) => {
-//     const { book_id, title, author_id, genre_id, price, quantity } = req.body;
-//     db.pool.query(
-//         'UPDATE Books SET title = ?, price = ?, quantity = ? WHERE book_id = ?',
-//         [price, quantity, book_id],
-//         (err) => {
-//             if (err) return res.status(500).send(err);
-//             res.redirect('/books');
-//         }
-//     );
-// });
-
-// app.post('/delete-book', (req, res) => {
-//     const { book_id } = req.body;
-//     db.pool.query('DELETE FROM books WHERE book_id = ?', [book_id], (err) => {
-//         if (err) return res.status(500).send(err);
-//         res.redirect('/books');
-//     });
-// });
-// function populateEditForm(data) {
-//     // Set other input fields
-//     document.getElementById('author_id').value = data.author_id;
-//     document.getElementById('genre_id').value = data.genre_id;
-//     // Show the form
-// }
-// Books Routes
-
-// Display all books
 app.get('/books', (req, res) => {
     const getBooksQuery = `
         SELECT Books.book_id, Books.title, Books.price, Books.quantity,
@@ -195,6 +125,41 @@ app.post('/delete-book', (req, res) => {
 
 
 // Authors 
+app.get('/authors', (req, res) => {
+    db.pool.query('SELECT * FROM Authors', (err, results) => {
+        if (err) return res.status(500).send(err);
+        res.render('authors', { data: results });
+    });
+});
+
+app.post('/add-author', (req, res) => {
+    const { name, description } = req.body;
+    db.pool.query('INSERT INTO Authors (name, description) VALUES (?, ?)', [name, description], (err) => {
+        if (err) return res.status(500).send(err);
+        res.redirect('/authors');
+    });
+});
+
+app.post('/edit-author', (req, res) => {
+    const { author_id, name, description } = req.body;
+    db.pool.query(
+        'UPDATE Authors SET name = ?, description = ? WHERE author_id = ?',
+        [name, description, author_id],
+        (err) => {
+            if (err) return res.status(500).send(err);
+            res.redirect('/authors');
+        }
+    );
+});
+
+app.post('/delete-author', (req, res) => {
+    const { author_id } = req.body;
+    db.pool.query('DELETE FROM Authors WHERE author_id = ?', [author_id], (err) => {
+        if (err) return res.status(500).send(err);
+        res.redirect('/authors');
+    });
+});
+
 
 // Genres 
 app.get('/genres', (req, res) => {
@@ -232,21 +197,74 @@ app.post('/delete-genre', (req, res) => {
     });
 });
 
+
+
 // Sales
 app.get('/sales', (req, res) => {
-    const getSales = 'SELECT * FROM Sales';
-    const getGenres = 'SELECT * FROM Genres';
-    const getBooks = 'SELECT * FROM Books';
-
-    db.pool.query(getSales, (err, sales) => {
+    const getSalesQuery = 
+    `
+        select Sales.sale_id, Customers.name as customer_name, Books.title as book_title, Sales.quantity_purchased, Sales.transaction_total, Sales.sale_date
+        from Sales
+        join Customers on Sales.customer_id = Customers.customer_id
+        join Books on Sales.book_id = Books.book_id
+    `;
+    db.pool.query(getSalesQuery, (err, sales) => {
         if (err) return res.status(500).send(err);
-        db.pool.query(getGenres, (err, genres) => {
+        db.pool.query('SELECT * FROM Customers', (err, customers) => {
             if (err) return res.status(500).send(err);
-            db.pool.query(getBooks, (err, books) => {
+            db.pool.query('SELECT * FROM Books', (err, books) => {
                 if (err) return res.status(500).send(err);
-                res.render('sales', { sales, genres, books });
+                res.render('sales', { sales, customers, books });
             });
         });
+    });
+});
+
+
+app.post('/add-sale', (req, res) => {
+    const { customer_id, book_id, quantity_purchased, transaction_total, sale_date } = req.body;
+    const addSaleQuery = `
+        INSERT INTO Sales (customer_id, book_id, quantity_purchased, transaction_total, sale_date)
+        VALUES (?, ?, ?, ?, ?)
+    `;
+    db.pool.query(
+        addSaleQuery, 
+        [customer_id, book_id, quantity_purchased, transaction_total, sale_date], 
+        (err) => {
+            if (err) return res.status(500).send(err);
+            res.redirect('/sales');
+        }
+    );
+});
+
+
+
+// Edit an existing Sale
+app.post('/edit-sale', (req, res) => {
+    const { sale_id, customer_id, book_id, quantity_purchased, transaction_total, sale_date } = req.body;
+    const editSaleQuery = `
+        UPDATE Sales
+        SET customer_id = ?, book_id = ?, quantity_purchased = ?, transaction_total = ?, sale_date = ?
+        WHERE sale_id = ?
+    `;
+    db.pool.query(
+        editSaleQuery, 
+        [customer_id, book_id, quantity_purchased, transaction_total, sale_date, sale_id], 
+        (err) => {
+            if (err) return res.status(500).send(err);
+            res.redirect('/sales');
+        }
+    );
+});
+
+
+// Delete a Sale
+app.post('/delete-sale', (req, res) => {
+    const { sale_id } = req.body;
+    const deleteSaleQuery = 'DELETE FROM Sales WHERE sale_id = ?';
+    db.pool.query(deleteSaleQuery, [sale_id], (err) => {
+        if (err) return res.status(500).send(err);
+        res.redirect('/sales');
     });
 });
 
@@ -254,5 +272,5 @@ app.get('/sales', (req, res) => {
 
 
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Server running at classwork.engr.oregonstate.edu:${PORT}`);
 });

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales</title>
+    <script>
+        function showEditForm(button) {
+            // Retrieve data attributes from the clicked button
+            const saleId = button.dataset.saleId;
+            const customerId = button.dataset.customerId;
+            const bookId = button.dataset.bookId;
+            const quantityPurchased = button.dataset.quantityPurchased;
+            const transactionTotal = button.dataset.transactionTotal;
+            const saleDate = button.dataset.saleDate;
+
+            // Populate the edit form fields with the retrieved data
+            document.getElementById('edit-sale-id').value = saleId;
+            document.getElementById('edit-customer-id').value = customerId;
+            document.getElementById('edit-book-id').value = bookId;
+            document.getElementById('edit-quantity-purchased').value = quantityPurchased;
+            document.getElementById('edit-transaction-total').value = transactionTotal;
+            document.getElementById('edit-sale-date').value = saleDate;
+
+            // Display the edit form
+            document.getElementById('edit-form').style.display = 'block';
+
+            // Scroll to the edit form smoothly
+            document.getElementById('edit-form').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</head>
+<body>
+    <h1>Sales</h1>
+
+    <!-- Sales Table -->
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Sale ID</th>
+                <th>Customer</th>
+                <th>Book</th>
+                <th>Quantity Purchased</th>
+                <th>Transaction Total</th>
+                <th>Sale Date</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each sales}}
+            <tr>
+                <td>{{this.sale_id}}</td>
+                <td>{{this.customer_name}}</td>
+                <td>{{this.book_title}}</td>
+                <td>{{this.quantity_purchased}}</td>
+                <td>{{this.transaction_total}}</td>
+                {{!-- <td>{{this.sale_date}}</td> --}}
+                <td>{{formatDate this.sale_date}}</td>
+                <td>
+                    <button 
+                        onclick="showEditForm(this)" 
+                        data-sale-id="{{this.sale_id}}" 
+                        data-customer-id="{{this.customer_id}}" 
+                        data-book-id="{{this.book_id}}"
+                        data-quantity-purchased="{{this.quantity_purchased}}"
+                        data-transaction-total="{{this.transaction_total}}"
+                        data-sale-date="{{this.sale_date}}">
+                        Edit
+                    </button>
+                </td>
+                <td>
+                    <form method="POST" action="/delete-sale">
+                        <input type="hidden" name="sale_id" value="{{this.sale_id}}">
+                        <button type="submit" onclick="return confirm('Are you sure you want to delete this sale?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <!-- Edit Sale Form -->
+    <div id="edit-form" style="display:none;">
+        <h2>Edit Sale</h2>
+        <form method="POST" action="/edit-sale">
+            <input type="hidden" name="sale_id" id="edit-sale-id">
+
+            <label for="edit-customer-id">Customer:</label>
+            <select name="customer_id" id="edit-customer-id" required>
+                <option value="">--Select Customer--</option>
+                {{#each customers}}
+                <option value="{{this.customer_id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+
+            <label for="edit-book-id">Book:</label>
+            <select name="book_id" id="edit-book-id" required>
+                <option value="">--Select Book--</option>
+                {{#each books}}
+                <option value="{{this.book_id}}">{{this.title}}</option>
+                {{/each}}
+            </select>
+
+            <label for="edit-quantity-purchased">Quantity Purchased:</label>
+            <input type="number" name="quantity_purchased" id="edit-quantity-purchased" required>
+
+            <label for="edit-transaction-total">Transaction Total:</label>
+            <input type="number" step="0.01" name="transaction_total" id="edit-transaction-total">
+
+            <label for="edit-sale-date">Sale Date:</label>
+            <input type="date" name="sale_date" id="edit-sale-date" required>
+
+            <button type="submit">Update Sale</button>
+        </form>
+    </div>
+
+    <!-- Add Sale Form -->
+    <h2>Add Sale</h2>
+    <form id="add-sale-form" method="POST" action="/add-sale">
+        <label for="add-customer-id">Customer:</label>
+        <select name="customer_id" id="add-customer-id" required>
+            <option value="">--Select Customer--</option>
+            {{#each customers}}
+            <option value="{{this.customer_id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
+
+        <label for="add-book-id">Book:</label>
+        <select name="book_id" id="add-book-id" required>
+            <option value="">--Select Book--</option>
+            {{#each books}}
+            <option value="{{this.book_id}}">{{this.title}}</option>
+            {{/each}}
+        </select>
+
+        <label for="add-quantity-purchased">Quantity Purchased:</label>
+        <input type="number" name="quantity_purchased" id="add-quantity-purchased" required>
+
+        <label for="add-transaction-total">Transaction Total:</label>
+        <input type="number" step="0.01" name="transaction_total" id="add-transaction-total">
+
+        <label for="add-sale-date">Sale Date:</label>
+        <input type="date" name="sale_date" id="add-sale-date" required>
+
+        <button type="submit">Add Sale</button>
+    </form>
+</body>
+</html>
