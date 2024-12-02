@@ -1,5 +1,5 @@
 
-Title: CS 340 Project - BookStore
+Title: CS 340 Group 124 Project - Book Store
 Team Member Names: Paxton Freeman & Edwin Trinh
 Group: 124
 Date: 12/2/24
