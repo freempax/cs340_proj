@@ -88,6 +88,8 @@ VALUES
 (5, 'Science Fiction', 'Futuristic concepts and technology');
 
 
+-- Sample Data Input
+
 -- Entries for the Customers Table
 INSERT INTO Customers (customer_id, name, email)
 VALUES
