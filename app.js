@@ -9,7 +9,7 @@ Date: 12/2/24
 /*
 Citations: 
 Date: 11/24/24
-Copied from: Used for learn how to handle the Javascript to Database calls
+Adopted from: Used to handle the Javascript to Database calls, but wrote my own database queries in query input section
 Source URL:https://waelyasmina.medium.com/a-guide-into-using-handlebars-with-your-express-js-application-22b944443b65
 
 Date: 11/24/24
@@ -27,6 +27,13 @@ var PORT = 2014;
 var db = require('./database/db-connector');
 
 // Handlebars
+/*
+Citation
+Date: 12/1/24
+Copied from: Format to handle drop down forms auto-fill, as well as handle dates in Table Display
+Source URL: https://momentjs.com/
+*/
+
 const { engine } = require('express-handlebars');
 const moment = require('moment');
 app.engine('.hbs', engine({ 
