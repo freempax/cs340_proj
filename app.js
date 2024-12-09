@@ -13,7 +13,7 @@ Adopted from: Used to handle the Javascript to Database calls, but wrote my own 
 Source URL:https://waelyasmina.medium.com/a-guide-into-using-handlebars-with-your-express-js-application-22b944443b65
 
 Date: 11/24/24
-Based on: Used for formatting of hbs files
+Based on: Used for formatting of hbs files, and also web page layout.
 Source URL:https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main
 
 */
